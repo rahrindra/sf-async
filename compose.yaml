@@ -1,0 +1,43 @@
+services:
+    php:
+        build:
+            dockerfile: ./docker/dev/php/Dockerfile
+            target: php_base
+            args:
+                PHP_UID: ${PHP_UID}
+                PHP_GID: ${PHP_GID}
+        container_name: sf-async-php
+        volumes:
+            - ./:/usr/share/code
+            - ./data/composer/:/root/.composer/
+        working_dir: /usr/share/code
+        restart: always
+
+    nginx:
+        build:
+            context: ./docker/dev/nginx
+        container_name: sf-async-nginx
+        volumes:
+            - ./:/usr/share/code
+        ports:
+            - 8881:8080
+        restart: always
+        depends_on:
+            - php
+
+    mysql:
+        image: mysql:8.0
+        container_name: sf-async_mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: sf-async
+            MYSQL_USER: rindra
+            MYSQL_PASSWORD: rindra
+        ports:
+            - "3602:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+
+volumes:
+    mysql_data:
