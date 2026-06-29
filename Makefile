@@ -23,6 +23,11 @@ symfony-new: build ## Create Symfony 8.1 project
 	$(DOCKER_COMPOSE) run --rm php bash ./bin/install-symfony.sh
 .PHONY: symfony-new
 
+compose-exec-php: ## Execute php service and open bash
+	$(DOCKER_COMPOSE) exec -it php bash
+.PHONY: compose-exec
+
+
 composer-install: ## Run composer install
 install: build
 	$(DOCKER_COMPOSE) run --rm php composer install
