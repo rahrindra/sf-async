@@ -2,7 +2,6 @@
 
 namespace App\Mailer;
 
-use App\Entity\EmailQueue;
 use App\Entity\User;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -12,15 +11,15 @@ class CreateUserMailer
         private readonly MailerInterface $mailer,
     ) {}
 
-    public function sendMail(EmailQueue $emailQueue): void
+    public function sendMail(User $user): void
     {
         $email = (new TemplatedEmail())
             ->from('no-reply@monsite.fr')
-            ->to($emailQueue->getRecipient())
-            ->subject($emailQueue->getSubject())
-            ->htmlTemplate($emailQueue->getTemplate())
+            ->to($user->getEmail())
+            ->subject('Votre compte a été créé')
+            ->htmlTemplate('emails/user_created.html.twig')
             ->context([
-                'user' => $emailQueue->getUser(),
+                'user' => $user,
             ]);;
 
         $this->mailer->send($email);

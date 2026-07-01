@@ -15,6 +15,12 @@ class EmailQueueClient implements EmailQueueClientInterface
     ) {
     }
 
+    public function save(EmailQueue $emailQueue): void
+    {
+        $this->entityManager->persist($emailQueue);
+        $this->entityManager->flush();
+    }
+
     public function userCreated(EmailQueue $emailQueue): void
     {
         $this->entityManager->persist($emailQueue);

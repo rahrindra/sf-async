@@ -5,6 +5,7 @@ namespace App\Persister;
 use App\Client\Contracts\EmailQueueClientInterface;
 use App\Entity\EmailQueue;
 use App\Entity\User;
+use App\Enum\EmailStatus;
 use App\Event\UserEvent;
 
 class EmailQueuePersister
@@ -25,5 +26,11 @@ class EmailQueuePersister
         ;
 
         $this->emailQueueClient->userCreated($emailQueue);
+    }
+
+    public function updateEmailQueueStatus(EmailQueue $emailQueue, EmailStatus $emailStatus): void
+    {
+        $emailQueue->setStatus($emailStatus);
+        $this->emailQueueClient->save($emailQueue);
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Command;
 
+use App\Entity\EmailQueue;
+use App\Enum\EmailStatus;
 use App\Event\UserEvent;
 use App\Mailer\CreateUserMailer;
+use App\Persister\EmailQueuePersister;
 use App\Provider\EmailQueueProvider;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -15,6 +18,7 @@ class EmailWorkerCommand extends Command
 {
     public function __construct(
         private readonly EmailQueueProvider $emailQueueProvider,
+        private readonly EmailQueuePersister $emailQueuePersister,
         private readonly CreateUserMailer $createUserMailer,
     ) {
         parent::__construct();
@@ -27,6 +31,7 @@ class EmailWorkerCommand extends Command
         foreach ($emailQueues as $emailQueue) {
             if ($emailQueue->getEvent() === USerEvent::USER_CREATED) {
                 $this->createUserMailer->sendMail($emailQueue);
+                $this->emailQueuePersister->updateEmailQueueStatus($emailQueue, EmailStatus::Sent);
             }
         }
 
