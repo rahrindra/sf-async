@@ -7,7 +7,6 @@ use App\DTO\User as UserDTO;
 use App\Entity\User;
 use App\Mailer\CreateUserMailer;
 use App\Message\UserEmailNotification;
-use App\Persister\EmailQueuePersister;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class UserManager
